@@ -4,9 +4,9 @@
 
 A simple library to read and map csv-files to typed PHP data model.
 
-It uses the PHP 8's typed properties/arguments and 
+It uses the PHP 8's typed properties/arguments and
 automatically converts string values to the typed defined
-for your class fields. 
+for your class fields.
 
 It makes things easier.
 
@@ -19,7 +19,8 @@ or
 attributes to define the mapping.
 Just map the ones you need in your model.
 
-Your CSV-File: 
+Your CSV-File:
+
 ```csv
  ;  Nachname;   Vorname;    Bemerkung
 1;  Stumpf;     Magdalena;  
@@ -28,6 +29,7 @@ Your CSV-File:
 ```
 
 You want to convert the data of the csv-file into that object model:
+
 ```php
 class Foo
 {
@@ -58,11 +60,8 @@ class Foo
 Now use the `CsvReader` class to convert data to your object model:
 
 ```php
-$options = new CsvReaderOptions();
-$options->delimiter = ';';
-
-$csvReader = new CsvReader('myfilename.csv', $options);
-foreach( $csvReader->read(Foo::class) as $row) {
+$csvReader = new CsvReader('myfilename.csv');
+foreach ($csvReader->read(Foo::class) as $row) {
     echo sprintf(
         '%s has the Number %. Check notice: %s'
         $row->getLastname(), $row->getId(), $row->getNotice() ?? '-'
@@ -87,7 +86,8 @@ Supported types are:
 If a type uses a nullable type like `?int` - an empty string of the CSV value is going to mapped as null
 
 ## Options for CSV
-You can set options for header, delimiter and enclosure. 
+
+You can set options for header, delimiter and enclosure.
 
 Refer to the [`CsvReaderOptions`](src/CsvReaderOptions.php)
 class to look at the options.
