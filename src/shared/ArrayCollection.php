@@ -32,7 +32,8 @@ class ArrayCollection
         return false;
     }
 
-    public function getItem(string $key): mixed    {
+    public function getItem(string $key): mixed
+    {
         if (isset($this->collection[$key])) {
             return $this->collection[$key];
         }
