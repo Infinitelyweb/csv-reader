@@ -15,26 +15,24 @@ class Mapper
     private ?string $methodName = null;
     private ?string $propertyName = null;
 
-    public function __construct(private readonly \ReflectionMethod | \ReflectionProperty $reflection, private readonly ?array $header)
+    public function __construct(private readonly \ReflectionMethod|\ReflectionProperty $reflection, private readonly ?array $header)
     {
     }
 
     public function getMapping(): ?Mapper
     {
         $index = $this->getColumnIndex();
-        if($index === null) {
+        if ($index === null) {
             return null;
         }
         $this->sourceColumnIndex = $index;
 
-        if($this->reflection instanceof \ReflectionMethod) {
+        if ($this->reflection instanceof \ReflectionMethod) {
             $this->methodName = $this->reflection->getName();
-            $this->targetType = (string) $this->reflection->getParameters()[0]->getType();
-        } else if($this->reflection instanceof \ReflectionProperty) {
+            $this->targetType = (string)$this->reflection->getParameters()[0]->getType();
+        } else if ($this->reflection instanceof \ReflectionProperty) {
             $this->propertyName = $this->reflection->getName();
-            $this->targetType = (string) $this->reflection->getType();
-        } else {
-            return null;
+            $this->targetType = (string)$this->reflection->getType();
         }
         return $this;
     }
@@ -54,20 +52,21 @@ class Mapper
     private function mapRowInto(array $row, object $object): object
     {
         $row = array_values($row);
-        $value = ValueConverter::convert( $row[ $this->sourceColumnIndex ], $this->targetType);
+        $value = ValueConverter::convert($row[$this->sourceColumnIndex], $this->targetType);
 
-        if($this->methodName) {
+        if ($this->methodName) {
             $object->{$this->methodName}($value);
-        } else if($this->propertyName) {
+        } else if ($this->propertyName) {
             $object->{$this->propertyName} = $value;
         }
+
         return $object;
     }
 
     private function getColumnIndex(): ?int
     {
         // we check all attributes - and use the first suitable attribute
-        foreach($this->getAttributes() ?? [] as $attribute) {
+        foreach ($this->getAttributes() ?? [] as $attribute) {
             $instance = $attribute->newInstance();
             if ($instance instanceof TitleMapping) {
                 $index = $this->header[$instance->getTitle()] ?? null;
@@ -81,6 +80,7 @@ class Mapper
                 return $instance->getIndex();
             }
         }
+
         return null;
     }
 
